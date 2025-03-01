@@ -47,31 +47,6 @@ type cliCommand struct {
 	config      *Config
 }
 
-func getCommands(config *Config) map[string]cliCommand {
-	return map[string]cliCommand{
-		"exit": {
-			name:        "exit",
-			description: "Exit the Pokedex",
-			callback:    func() error { return commandExit(config) },
-		},
-		"help": {
-			name:        "help",
-			description: "Displays a help message",
-			callback:    func() error { return commandHelp(config) },
-		},
-		"map": {
-			name:        "map",
-			description: "Displays 20 locations",
-			callback:    func() error { return commandMap(config) },
-		},
-		"mapb": {
-			name:        "mapb",
-			description: "Displays previous 20 locations",
-			callback:    func() error { return commandMapBack(config) },
-		},
-	}
-}
-
 type Config struct {
 	Next     string
 	Previous string

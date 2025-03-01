@@ -3,50 +3,43 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
+
+	"github.com/kindiregg/pokedexcli/internal/pokecache"
 )
 
-func commandMap(config *Config) error {
+func commandMap(config *Config, cache *pokecache.Cache) error {
 	url := "https://pokeapi.co/api/v2/location-area"
 	if config.Next != "" {
 		url = config.Next
 	}
-	err := fetchAndDisplayLocations(url, config)
+	err := fetchAndDisplayLocations(url, config, cache)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func commandMapBack(config *Config) error {
+func commandMapBack(config *Config, cache *pokecache.Cache) error {
 	if config.Previous == "" {
 		fmt.Println("You're on the first page")
 		return nil
 	}
-	err := fetchAndDisplayLocations(config.Previous, config)
+	err := fetchAndDisplayLocations(config.Previous, config, cache)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-// Helper function to fetch and display locations
-func fetchAndDisplayLocations(url string, config *Config) error {
-	resp, err := http.Get(url)
+func fetchAndDisplayLocations(url string, config *Config, cache *pokecache.Cache) error {
+	body, err := getAPIData(url, cache)
 	if err != nil {
-		return fmt.Errorf("could not get locations: %w", err)
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return fmt.Errorf("could not read response")
+		return err
 	}
 
 	var locationResp LocationAreaResponse
 	if err := json.Unmarshal(body, &locationResp); err != nil {
-		return fmt.Errorf("could not parse response")
+		return fmt.Errorf("could not parse response: %w", err)
 	}
 
 	for _, location := range locationResp.Results {
