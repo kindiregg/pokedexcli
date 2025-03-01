@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/kindiregg/pokedexcli/internal/pokecache"
 	"io"
 	"net/http"
+
+	"github.com/kindiregg/pokedexcli/internal/pokecache"
 )
 
 func getAPIData(url string, cache *pokecache.Cache) ([]byte, error) {
@@ -13,7 +14,6 @@ func getAPIData(url string, cache *pokecache.Cache) ([]byte, error) {
 		return data, nil
 	}
 
-	fmt.Println("Fetching new data from:", url)
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("HTTP request failed: %w", err)

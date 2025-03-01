@@ -22,9 +22,10 @@ func startRepl(commands map[string]cliCommand) {
 		}
 
 		commandName := cleanedInput[0]
+		args := cleanedInput[1:]
 
 		if command, ok := commands[commandName]; ok {
-			if err := command.callback(); err != nil {
+			if err := command.callback(args...); err != nil {
 				fmt.Printf("Error: %v\n", err)
 			}
 		} else {
@@ -38,16 +39,4 @@ func cleanInput(text string) []string {
 	lower := strings.ToLower(text)
 	words := strings.Fields(lower)
 	return words
-}
-
-type cliCommand struct {
-	name        string
-	description string
-	callback    func() error
-	config      *Config
-}
-
-type Config struct {
-	Next     string
-	Previous string
 }
