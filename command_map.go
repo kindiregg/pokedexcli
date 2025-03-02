@@ -6,7 +6,7 @@ import (
 )
 
 func commandMapForward(config *Config, args ...string) error {
-	url := "https://pokeapi.co/api/v2location-area"
+	url := "https://pokeapi.co/api/v2/location-area"
 	if config.Next != "" {
 		url = config.Next
 	}

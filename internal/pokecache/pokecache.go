@@ -16,7 +16,10 @@ type cacheEntry struct {
 }
 
 func NewCache(interval time.Duration) Cache {
-	cache := Cache{entries: make(map[string]cacheEntry)}
+	cache := Cache{
+		entries: make(map[string]cacheEntry),
+		mu:      &sync.Mutex{},
+	}
 	cache.reapLoop(interval)
 	return cache
 }

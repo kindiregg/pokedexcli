@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 func commandExplore(config *Config, args ...string) error {
@@ -18,10 +19,15 @@ func commandExplore(config *Config, args ...string) error {
 
 	fmt.Printf("Exploring %s... \n", location.Name)
 
+	var currentPokemon []string
+
 	fmt.Println("Found Pokemon:")
 	for _, encounter := range location.PokemonEncounters {
 		fmt.Printf(" - %s\n", encounter.Pokemon.Name)
+		currentPokemon = append(currentPokemon, strings.TrimSpace(strings.ToLower(encounter.Pokemon.Name)))
 	}
+
+	config.encounteredPokemon = currentPokemon
 
 	return nil
 
