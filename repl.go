@@ -5,9 +5,19 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/kindiregg/pokedexcli/internal/pokeapi"
 )
 
-func startRepl(commands map[string]cliCommand) {
+type Config struct {
+	Next          string
+	Previous      string
+	caughtPokemon map[string]pokeapi.Pokemon
+	pokeapiClient pokeapi.Client
+}
+
+func startRepl(config *Config) {
+	commands := getCommands()
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("Pokedex > ")
@@ -25,7 +35,7 @@ func startRepl(commands map[string]cliCommand) {
 		args := cleanedInput[1:]
 
 		if command, ok := commands[commandName]; ok {
-			if err := command.callback(args...); err != nil {
+			if err := command.callback(config, args...); err != nil {
 				fmt.Printf("Error: %v\n", err)
 			}
 		} else {

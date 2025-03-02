@@ -3,36 +3,35 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/kindiregg/pokedexcli/internal/pokecache"
 )
 
-func commandMap(config *Config, cache *pokecache.Cache) error {
-	url := "https://pokeapi.co/api/v2/location-area"
+func commandMapForward(config *Config, args ...string) error {
+	url := "https://pokeapi.co/api/v2location-area"
 	if config.Next != "" {
 		url = config.Next
 	}
-	err := fetchAndDisplayLocations(url, config, cache)
+	err := fetchAndDisplayLocations(url, config)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func commandMapBack(config *Config, cache *pokecache.Cache) error {
+func commandMapBack(config *Config, args ...string) error {
 	if config.Previous == "" {
 		fmt.Println("You're on the first page")
 		return nil
 	}
-	err := fetchAndDisplayLocations(config.Previous, config, cache)
+	err := fetchAndDisplayLocations(config.Previous, config)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func fetchAndDisplayLocations(url string, config *Config, cache *pokecache.Cache) error {
-	body, err := getAPIData(url, cache)
+func fetchAndDisplayLocations(url string, config *Config) error {
+	cache := &config.pokeapiClient.Cache
+	body, err := get20LocationsData(url, *cache)
 	if err != nil {
 		return err
 	}

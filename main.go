@@ -3,12 +3,14 @@ package main
 import (
 	"time"
 
-	"github.com/kindiregg/pokedexcli/internal/pokecache"
+	"github.com/kindiregg/pokedexcli/internal/pokeapi"
 )
 
 func main() {
-	cache := pokecache.NewCache(5 * time.Minute)
-	config := &Config{}
-	commands := getCommands(config, cache)
-	startRepl(commands)
+	pokeClient := pokeapi.NewClient(5*time.Second, time.Minute*5)
+	config := &Config{
+		caughtPokemon: map[string]pokeapi.Pokemon{},
+		pokeapiClient: pokeClient,
+	}
+	startRepl(config)
 }
